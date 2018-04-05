@@ -21,6 +21,9 @@
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
 
+# Exclude all idea IDE file
+.idea/
+
 ## File-based project format:
 *.iws
 
@@ -135,3 +138,5 @@ ENV/
 # Private files
 private_*
 Downloads/
+config/
+test.json

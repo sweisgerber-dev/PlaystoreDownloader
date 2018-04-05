@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/playstore" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.5.2 virtualenv at C:\Users\Claudiu\Desktop\GitHub\PlaystoreDownloader\venv" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6 (PlaystoreDownloader)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">
