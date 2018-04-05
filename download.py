@@ -2,6 +2,8 @@
 # coding: utf-8
 
 import argparse
+import datetime
+import json
 import logging
 import os
 import re
@@ -18,6 +20,9 @@ credentials_default_location = 'credentials.json'
 # Default directory where to save the downloaded applications.
 downloaded_apk_default_location = 'Downloads'
 
+def rreplace(string: str, old: str, new: str, occurrence: int):
+    rsplitted_string = string.rsplit(old, occurrence)
+    return new.join(rsplitted_string)
 
 def get_cmd_args(args: list = None):
     """
@@ -52,6 +57,10 @@ def main():
     try:
         # Get the application details.
         app = api.app_details(args.package.strip(' \'"')).docV2
+        app_details = api.protobuf_to_dict(app)
+        # print(app_details_dict)
+        # json.dumps(app)
+        # print(app)
     except AttributeError:
         print('Error when downloading "{0}". Unable to get app\'s details.'.format(args.package.strip(' \'"')))
         sys.exit(1)
@@ -59,16 +68,22 @@ def main():
     details = {
         'package_name': app.docid,
         'title': app.title,
-        'creator': app.creator
+        'creator': app.creator,
+        'version': app_details['details']['appDetails']['file'][0]['versionCode'],
+        'download_date': datetime.datetime.today().strftime('%Y-%m-%d_%H-%M-%S')
     }
+    print(details)
 
     if args.out.strip(' \'"') == downloaded_apk_default_location:
         # The downloaded apk will be saved in the Downloads folder (created in the same folder as this script).
         downloaded_apk_file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                                 downloaded_apk_default_location,
-                                                re.sub('[^\w\-_.\s]', '_', '{0} by {1} - {2}.apk'
-                                                       .format(details['title'], details['creator'],
-                                                               details['package_name'])))
+                                                '{}_{}_{}.apk'.format(
+                                                    details['package_name'],
+                                                    details['download_date'],
+                                                    details['version']))
+        downloaded_info_file_path = rreplace(downloaded_apk_file_path, '.apk', '.proto', 1)
+        downloaded_json_file_path = rreplace(downloaded_apk_file_path, '.apk', '.json', 1)
     else:
         # The downloaded apk will be saved in the location chosen by the user.
         downloaded_apk_file_path = os.path.abspath(args.out.strip(' \'"'))
@@ -92,7 +107,11 @@ def main():
     if not success:
         print('Error when downloading "{0}".'.format(details['package_name']))
         sys.exit(1)
-
+    else:
+        with open(downloaded_info_file_path, 'w') as info_file:
+            info_file.write(str(app))
+        with open(downloaded_json_file_path, 'w') as json_file:
+            json.dump(app_details, json_file, indent=2)
 
 if __name__ == '__main__':
     main()
