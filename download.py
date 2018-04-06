@@ -11,6 +11,8 @@ import sys
 
 from playstore.playstore import Playstore
 
+APK_FILENAME = '{}--{}--{}.apk'#.format(package_name, version, date_string)
+
 # Logging configuration.
 logging.basicConfig(format='%(asctime)s> [%(levelname)s][%(funcName)s()] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 
@@ -70,7 +72,7 @@ def main():
         'title': app.title,
         'creator': app.creator,
         'version': app_details['details']['appDetails']['file'][0]['versionCode'],
-        'download_date': datetime.datetime.today().strftime('%Y-%m-%d_%H-%M-%S')
+        'download_date': datetime.datetime.today().strftime('%Y-%m-%d')
     }
     print(details)
 
@@ -78,10 +80,11 @@ def main():
         # The downloaded apk will be saved in the Downloads folder (created in the same folder as this script).
         downloaded_apk_file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                                 downloaded_apk_default_location,
-                                                '{}_{}_{}.apk'.format(
+                                                APK_FILENAME.format(
                                                     details['package_name'],
-                                                    details['download_date'],
-                                                    details['version']))
+                                                    details['version'],
+                                                    details['download_date']
+                                                ))
         downloaded_info_file_path = rreplace(downloaded_apk_file_path, '.apk', '.proto', 1)
         downloaded_json_file_path = rreplace(downloaded_apk_file_path, '.apk', '.json', 1)
     else:
