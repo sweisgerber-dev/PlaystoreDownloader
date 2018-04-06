@@ -71,9 +71,12 @@ def main():
         'package_name': app.docid,
         'title': app.title,
         'creator': app.creator,
-        'version': app_details['details']['appDetails']['file'][0]['versionCode'],
         'download_date': datetime.datetime.today().strftime('%Y-%m-%d')
     }
+    try:
+        details['version'] = app_details['details']['appDetails']['file'][0]['versionCode']
+    except KeyError:
+        details['version'] = 0
     print(details)
 
     if args.out.strip(' \'"') == downloaded_apk_default_location:

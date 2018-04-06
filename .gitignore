@@ -138,6 +138,6 @@ ENV/
 # Private files
 private_*
 Downloads/
-config/
+config/credentials
 test.json
 credentials.json
